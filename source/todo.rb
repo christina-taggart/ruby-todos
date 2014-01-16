@@ -27,10 +27,7 @@ class List
   end
 
   def print
-    puts "\nID\t#{'TASK'.ljust(ljustify_length)}\tCOMPLETE?"
-    @tasks.each do |task|
-      puts "#{task.task_id}\t#{task.text.ljust(ljustify_length)}\t#{task.completed_mark}"
-    end
+    puts self.to_s
   end
 
   def ljustify_length
@@ -42,6 +39,15 @@ class List
 
   def to_a
     @tasks.map { |task| task.to_a }
+  end
+
+  def to_s
+    list_string = String.new
+    list_string += "\nID\t#{'TASK'.ljust(ljustify_length)}\tCOMPLETE?\n"
+    @tasks.each do |task|
+      list_string += "#{task.task_id}\t#{task.text.ljust(ljustify_length)}\t#{task.completed_mark}\n"
+    end
+    list_string
   end
 
   def duplicate_id?(task_id)
@@ -115,6 +121,7 @@ class ListInterface
         puts "Invalid command."
     end
     save_csv(user_list)
+    save_txt(user_list)
   end
 
   def load_csv
@@ -130,6 +137,10 @@ class ListInterface
     CSV.open(@@csv_file_path, "w") do |csv|
       list.to_a.each { |task| csv << task }
     end
+  end
+
+  def save_txt(list)
+    File.open("todo.txt", 'w') { |file| file.write(list.to_s) }
   end
 end
 
