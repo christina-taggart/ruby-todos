@@ -28,7 +28,7 @@ require 'csv'
 class List
   attr_accessor :tasklist
   def initialize
-    @tasklist = CSV.read("todo.csv").map{ |task| Task.new( task.join(" ") ) }
+    @tasklist = CSV.read("todo.csv").map{ |task| Task.new( task[0...-1].join, (task[-1].strip == 'true') ) }
   end
 
   def add(new_task = ARGV[1..-1].join(" "))
@@ -37,30 +37,36 @@ class List
   end
 
   def delete(task_num = ARGV[1..-1].join.to_i)
+    puts "Deleted '#{@tasklist[task_num-1].task}' from your TODO list"
     @tasklist.delete_at(task_num-1)
     write_to_file
   end
 
+  def complete_task(task_num = ARGV[1..-1].join.to_i)
+    @tasklist[task_num - 1].done = true
+    write_to_file
+    puts "'#{@tasklist[task_num-1].task}' has been marked Complete."
+  end
+
   def write_to_file
     CSV.open('todo.csv', 'w') do |csv|
-      @tasklist.each{ |item| csv << ["#{item.task}"] }
+      @tasklist.each{ |item| csv << [item.task, item.done] }
     end
   end
 
   def print
-    i=1
-    @tasklist.each do |task|
-      puts "#{i}: #{task.task}"
-      i+=1
-    end
+    system('clear')
+    puts "Things to do:\n\n"
+    @tasklist.each_with_index { |task, index| puts "#{index+1}: #{task.task} is #{task.done ? 'done' : 'not done'}." }
   end
+
 end
 
 class Task
   attr_accessor :done, :task
-  def initialize(task)
+  def initialize(task, done=false)
     @task = task
-    @done = false
+    @done = done
   end
 end
 
