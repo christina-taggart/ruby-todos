@@ -32,20 +32,26 @@ class List
   end
 
   def add(new_task = ARGV[1..-1].join(" "))
+    system("clear")
     @tasklist << Task.new(new_task)
     write_to_file
+    print
   end
 
   def delete(task_num = ARGV[1..-1].join.to_i)
+    system("clear")
     puts "Deleted '#{@tasklist[task_num-1].task}' from your TODO list"
     @tasklist.delete_at(task_num-1)
     write_to_file
+    print
   end
 
   def complete_task(task_num = ARGV[1..-1].join.to_i)
+    system("clear")
     @tasklist[task_num - 1].done = true
     write_to_file
     puts "'#{@tasklist[task_num-1].task}' has been marked Complete."
+    print
   end
 
   def write_to_file
@@ -55,9 +61,8 @@ class List
   end
 
   def print
-    system('clear')
-    puts "Things to do:\n\n"
-    @tasklist.each_with_index { |task, index| puts "#{index+1}: #{task.task} is #{task.done ? 'done' : 'not done'}." }
+    puts "\nThings to do:\n\n"
+    @tasklist.each_with_index { |task, index| puts "#{(index+1).to_s.rjust(2)}.   #{task.done ? '[X]' : '[ ]'}   #{task.task}" }
   end
 
 end
