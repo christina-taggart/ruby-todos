@@ -40,10 +40,11 @@ end
 class List
   attr_reader :list
   def initialize
+    @input = ARGV
     @list = []
   end
   def add(content, priority = 3)
-    @list << Item.new(content, priority)
+    @list << Item.new(@input.join, priority)
   end
   def remove_done
     @list.delete_if { |item| item.done }
@@ -58,20 +59,43 @@ class List
       end
     end
   end
+  def sort_by_priority!
+    @list.sort! { |item1, item2| item2.priority <=> item1.priority }
+  end
+  def display_list
+    sort_by_priority!
+    @list.each do |item|
+      puts "#{item.priority} - #{item.content}"
+    end
+  end
 
 end
 
+user_input = ARGV
+
 list = List.new
-list.add("item 1",3)
-list.add("item 2")
-p list.list
+list.user_input[0]
+list.display_list
+# list.add("item 1",3)
+# list.add("item 2")
+# p list.list
 
-p "--------------"
-item = Item.new("this is an item", 3)
-# p item.found_item?("this is an item") == true
-list.remove_item("item 1")
-p list.list
-
+# p "--------------"
+# item = Item.new("this is an item", 3)
+# # p item.found_item?("this is an item") == true
+# list.remove_item("item 1")
+# p list.list
+# p "--------------"
+# list.mark_as_complete("item 2")
+# p list.list
+# p list.remove_done
+# p "--------------"
+# list.add("Really important", 5)
+# list.add("Kind of important", 3)
+# list.add("Not important", 1)
+# list.add("indifferent", 2)
+# # list.sort_by_priority!
+# list.display_list
 
 
 # Remember, there are four high-level responsibilities, each of which have multiple sub-responsibilities:
