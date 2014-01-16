@@ -40,11 +40,11 @@ end
 class List
   attr_reader :list
   def initialize
-    @input = ARGV
+    # @input = ARGV
     @list = []
   end
   def add(content, priority = 3)
-    @list << Item.new(@input.join, priority)
+    @list << Item.new(content, priority)
   end
   def remove_done
     @list.delete_if { |item| item.done }
@@ -71,13 +71,14 @@ class List
 
 end
 
-user_input = ARGV
-
 list = List.new
-list.user_input[0]
+list.add("item 1", 3)
+list.add("item 2")
+
+  list.send ARGV[0].to_sym, *ARGV[1], *ARGV[2].to_i
+
 list.display_list
-# list.add("item 1",3)
-# list.add("item 2")
+
 # p list.list
 
 # p "--------------"
