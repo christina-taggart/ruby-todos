@@ -41,7 +41,7 @@ end
 class List # controller?
   attr_reader :list
   def initialize
-    @list = []
+    @list = Array.new
     @list = Model.pull_file(self)
   end
   def add(content, priority = 3)
@@ -54,20 +54,14 @@ class List # controller?
     @list.delete_if { |item| item.found_item?(string) }
   end
   def mark_as_complete(string)
-    @list.each do |item|
-      if item.found_item?(string)
-        item.done = true
-      end
-    end
+    @list.each { |item| item.done = true if item.found_item?(string) }
   end
   def sort_by_priority!
     @list.sort! { |item1, item2| item2.priority <=> item1.priority }
   end
   def display_list
     sort_by_priority!
-    @list.each do |item|
-      puts "#{item.priority} - #{item.content}"
-    end
+    @list.each {|item| puts "#{item.priority} - #{item.content}" }
   end
 end
 
