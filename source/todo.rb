@@ -2,29 +2,35 @@ require 'csv'
 
 class List
 
-  def initialize
-    @to_do = []
+  def initialize(list_of_tasks)
+    @to_do = list_of_tasks
+    display
+    write_all_to_txt
   end
 
-  def add
-    @to_do << @tasks
-  end
+  private
 
   def display
-    @to_do if ARGV[0] == "list"
+    puts @to_do if ARGV[0] == "list"
+  end
+
+  def write_all_to_txt
+    File.open("todo.csv", "w") do |input|
+      @to_do.each { |task| input << task + "\n" }
+    end
   end
 
 end
 
 class Task
-  attr_reader :tasks
 
   def initialize
     @tasks = []
+    parse_csv
   end
 
   def add_task
-    @tasks << ARGV[1] if define_input[0] == "add"
+    @tasks << ("[ ]" + ARGV[1]) if define_input[0] == "add"
     @tasks
   end
 
@@ -38,8 +44,8 @@ class Task
     @tasks
   end
 
-  def parse_csv
-    CSV.foreach("todo.csv") { |csv| @tasks << csv.join('') }
+  def route_to_list
+    List.new(@tasks)
   end
 
   private
@@ -52,22 +58,14 @@ class Task
     ((ARGV[1].to_i)-1)
   end
 
+  def parse_csv
+    CSV.foreach("todo.csv") { |csv| @tasks << csv.join('') }
+  end
+
 end
 
 new_task = Task.new
-list = List.new
-new_task.parse_csv
 new_task.add_task
 new_task.delete_task
 new_task.complete_task
-list.add
-#puts list.display
-
-# Remember, there are four high-level responsibilities, each of which have multiple sub-responsibilities:
-# 1. Gathering user input and taking the appropriate action (controller)
-# 2. Displaying information to the user (view)
-# 3. Reading and writing from the todo.txt file (model)
-# 4. Manipulating the in-memory objects that model a real-life TODO list (domain-specific model)
-
-# Note that (4) is where the essence of your application lives.
-# Pretty much every application in the universe has some version of responsibilities (1), (2), and (3).
+new_task.route_to_list
