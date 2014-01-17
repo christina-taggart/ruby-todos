@@ -45,12 +45,11 @@ class Model
   def execute
     self.send(@action)
     write_to_file
-    @response = @tasklist
     to_controller
   end
 
   def to_controller
-   @response
+    @response = @tasklist
   end
 
   def add
