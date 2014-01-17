@@ -5,25 +5,34 @@ class List
 
   def initialize
     @list = []
+    CSV.foreach("todo.csv") do |task|
+      @list << Task.new(task)
+    end
+
   end
 
-  def add(task)
-    @task = task
+  def add(task_description)
+    @task = Task.new([task_description])
     @list << @task
-    CSV.open("todo.csv", "wb") do |csv|
-      csv << [@task]
-    end
+
+    update_csv
   end
 
   def delete(task_to_delete)
     found = false
     @list.each do |task|
-      if task.description == task_to_delete
+      if task.description[0] == task_to_delete
         @list.delete(task)
         found = true
       end
     end
-    puts "This item is not in your list." if found == false
+    if found == false
+      puts "This item is not in your list."
+    else
+      puts "#{task_to_delete} has been deleted from the list"
+    end
+    update_csv
+
   end
 
   def display_completed
@@ -42,25 +51,30 @@ class List
   end
 
   def display_all_tasks
-    CSV.foreach("todo.csv") do |task|
-      add(Task.new(task))
-    end
-
+    #
     @list.each {|task| puts task.description}
+
     # display_completed
     # display_to_do
   end
 
+  def update_csv
+    #p @list
+    CSV.open("todo.csv", "wb") do |csv|
+      @list.each {|item| csv << item.description}
+    end
+  end
 end
 
 
 class Task
 
-  attr_accessor :description, :completed
+  attr_accessor :description, :completed, :id
 
   def initialize(description)
     @completed = false
     @description = description
+    @id = id
   end
 
   def complete
@@ -74,10 +88,9 @@ end
 todo_list = List.new()
 #todo_list.display_all_tasks
 
-todo_list.add(Task.new("walk the dog"))
+todo_list.add("walk the dog")
+todo_list.delete("Move with Lil to the black mountain hills of Dakota")
 todo_list.display_all_tasks
-
-
 
 
 
