@@ -65,9 +65,7 @@ class List # controller?
   end
   def display_list
     sort_by_priority!
-    @list.each do |item|
-      puts "#{item.priority} - #{item.content}"
-    end
+    @list.each {|item| puts "#{item.priority} - #{item.content}" }
   end
 end
 
