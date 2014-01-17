@@ -14,27 +14,19 @@ class List
   end
 
   def add_task(task)
-    task.increment_id if duplicate_id?(task.task_id)
     @tasks << task
   end
 
   def remove_task(task_id)
-    @tasks.delete_if { |task| task.task_id == task_id}
+    @tasks.delete_at(task_id-1)
   end
 
   def complete_task(task_id)
-    @tasks.each { |task| task.complete if task.task_id == task_id }
+    @tasks[task_id-1].complete
   end
 
   def print
     puts self.to_s
-  end
-
-  def ljustify_length
-    longest_text = @tasks.max do |task1, task2|
-      task1.text.length <=> task2.text.length
-    end
-    longest_text.text.length
   end
 
   def to_a
@@ -44,37 +36,33 @@ class List
   def to_s
     list_string = String.new
     list_string += "\nID\t#{'TASK'.ljust(ljustify_length)}\tCOMPLETE?\n"
-    @tasks.each do |task|
-      list_string += "#{task.task_id}\t#{task.text.ljust(ljustify_length)}\t#{task.completed_mark}\n"
+    @tasks.each_with_index do |task, index|
+      list_string += "#{index+1}\t#{task.text.ljust(ljustify_length)}\t#{task.completed_mark}\n"
     end
     list_string
   end
 
-  def duplicate_id?(task_id)
-    if @tasks.find { |task| task.task_id == task_id }
-      true
-    else
-      false
+  private
+
+  def ljustify_length
+    longest_text = @tasks.max do |task1, task2|
+      task1.text.length <=> task2.text.length
     end
+    longest_text.text.length
   end
 end
 
 
 class Task
   include TaskHelpers
-  attr_reader :text, :task_id
-  @@task_id_num = 0
-
+  attr_reader :text
   def initialize(text_or_array)
-    @@task_id_num += 1
     if text_or_array.class == String
-      @task_id = @@task_id_num
       @text = text_or_array
       @completed = false
     elsif text_or_array.class == Array
-      @task_id = text_or_array[0].to_i
-      @text = text_or_array[1]
-      @completed = string_to_bool(text_or_array[2])
+      @text = text_or_array[0]
+      @completed = string_to_bool(text_or_array[1])
     end
   end
 
@@ -87,11 +75,7 @@ class Task
   end
 
   def to_a
-    [@task_id, @text, @completed]
-  end
-
-  def increment_id
-    @task_id += 1
+    [@text, @completed]
   end
 end
 
@@ -109,12 +93,15 @@ class ListInterface
       when "complete"
         task_id = @argument[0].to_i
         user_list.complete_task(task_id)
+        user_list.print
       when "add"
         text = @argument.join(" ")
         user_list.add_task(Task.new(text))
+        user_list.print
       when "delete"
         task_id = @argument[0].to_i
         user_list.remove_task(task_id)
+        user_list.print
       when "list"
         user_list.print
       else

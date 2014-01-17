@@ -1,8 +1,6 @@
 
-ID	TASK                                                          	COMPLETE?
-1	buy some cheese                                               	[X]
-3	this is a really really long task that will never be completed	[ ]
-4	another task                                                  	[ ]
-5	something something something                                 	[ ]
-6	something something something                                 	[ ]
-7	eat a cupcake                                                 	[ ]
+ID	TASK                	COMPLETE?
+1	Go outside and relax	[ ]
+2	Pick up a new hobby 	[ ]
+3	Code all day        	[X]
+4	Make a soufflé      	[ ]
