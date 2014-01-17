@@ -23,13 +23,12 @@ read/write module
               -write csv
 
 =end
-require 'todo.csv'
 require 'csv'
 
 class Item
   attr_accessor :done
   attr_reader :content, :priority
-  def initialize(content, priority)
+  def initialize(content, priority=3)
     @content = content
     @priority = priority
     @done = false
@@ -42,8 +41,8 @@ end
 class List # controller?
   attr_reader :list
   def initialize
-    # @input = ARGV
     @list = []
+    @list = Model.pull_file(self)
   end
   def add(content, priority = 3)
     @list << Item.new(content, priority)
@@ -73,18 +72,23 @@ class List # controller?
 end
 
 class Model
-  def self.pull_file(list)
-    CSV.foreach("/source/todo.csv") do |row|
-      list.list << row
-    end
+  def self.pull_file(list_object)
+    CSV.foreach("todo.csv") { |row| list_object.list << row }
+    list_object.list.flatten!
+    make_item_objects(list_object)
+  end
+  def self.make_item_objects(list_object)
+    list_object.list.map {|item| Item.new(item)}
   end
 end
 
+
 list = List.new
+p list.list
 # list.add("item 1", 3)
 # list.add("item 2")
 
-Model.pull_file(list)
+# Model.pull_file(list)
 
 #   list.send ARGV[0].to_sym, *ARGV[1], *ARGV[2].to_i
 
