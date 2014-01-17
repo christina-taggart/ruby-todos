@@ -1,13 +1,11 @@
-Lose Lil to Danny
-Get hit in the eye by Danny
-Walk into town seeking revenge
-Book room at local saloon
-Check into room and read Gideon's bible
-Drink too much gin
-Overhear Lil and Danny in neighboring room
-Burst into neighboring room and declare a showdown
-Get shot by Danny and collapse in corner
-Visit doctor
-Return to room and read Gideon's bible
-Sing along! D'do d'do d'do do do d'do d'do d'do
-walk the dog
+Move with Lil to the black mountain hills of Dakota,true,true,true,true,false
+Walk into town seeking revenge,false,false,false,false,false
+Book room at local saloon,false,false,false,false,false
+Check into room and read Gideon's bible,false,false,false,false,true
+Overhear Lil and Danny in neighboring room,false,false,false,false,false
+Burst into neighboring room and declare a showdown,false,false,false,false,true
+Get shot by Danny and collapse in corner,false,false,false,false,false
+Visit doctor,false,false,false,false,false
+Return to room and read Gideon's bible,false,false,false,false,false
+Sing along! D'do d'do d'do do do d'do d'do d'do,false,false,false,false,false
+walk the dog,false
