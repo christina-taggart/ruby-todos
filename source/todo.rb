@@ -79,7 +79,8 @@ class Task
   end
 end
 
-
+# CLI Viewer for loading our list from a CSV and writing our changes
+# to the same file.
 class ListInterface
   @@csv_file_path = "todo.csv"
   def initialize
@@ -88,27 +89,33 @@ class ListInterface
   end
 
   def run!
-    user_list = load_csv
-    case @command
-      when "complete"
-        task_id = @argument[0].to_i
-        user_list.complete_task(task_id)
-        user_list.print
-      when "add"
-        text = @argument.join(" ")
-        user_list.add_task(Task.new(text))
-        user_list.print
-      when "delete"
-        task_id = @argument[0].to_i
-        user_list.remove_task(task_id)
-        user_list.print
-      when "list"
-        user_list.print
-      else
-        puts "Invalid command."
-    end
-    save_csv(user_list)
-    save_txt(user_list)
+    @user_list = load_csv
+    self.send(@command)
+    save_csv(@user_list)
+    save_txt(@user_list)
+  end
+
+  def complete
+    task_id = @argument[0].to_i
+    @user_list.complete_task(task_id)
+    self.list
+  end
+
+  def add
+    text = @argument.join(" ")
+    @user_list.add_task(Task.new(text))
+    self.list
+  end
+
+  def delete
+    task_id = @argument[0].to_i
+    @user_list.remove_task(task_id)
+    self.list
+  end
+
+  def list
+    system("clear")
+    @user_list.print
   end
 
   def load_csv
@@ -130,24 +137,6 @@ class ListInterface
     File.open("todo.txt", 'w') { |file| file.write(list.to_s) }
   end
 end
-
-#----DRIVERS-----
-
-# def assert(error_message, test)
-#   raise error_message unless test
-# end
-
-# test_list = List.new
-# test_list.add_task(Task.new("Buy some milk"))
-# test_list.add_task(Task.new("Pay bills"))
-# test_list.add_task(Task.new("Fix Car"))
-# test_list.print
-# test_list.remove_task(2)
-# test_list.print
-# test_list.add_task(Task.new("Study"))
-# test_list.print
-# test_list.complete_task(4)
-# test_list.print
 
 #-----RUN THE INTERFACE-----
 the_interface = ListInterface.new

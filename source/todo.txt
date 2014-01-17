@@ -1,6 +1,6 @@
 
-ID	TASK                	COMPLETE?
-1	Go outside and relax	[ ]
-2	Pick up a new hobby 	[ ]
-3	Code all day        	[X]
-4	Make a soufflé      	[ ]
+ID	TASK                             	COMPLETE?
+1	Go outside and relax             	[X]
+2	Go to the grocery store          	[ ]
+3	Make a better list than David    	[X]
+4	Make a WAY better list than David	[X]
